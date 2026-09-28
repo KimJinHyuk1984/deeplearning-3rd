@@ -1,0 +1,6 @@
+/source/
+/work-temp/
+.venv/
+venv/
+__pycache__/
+*.pyc

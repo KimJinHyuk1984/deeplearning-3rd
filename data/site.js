@@ -4,9 +4,9 @@
  */
 window.SITE = {
   site: {
-    title: "강의 모음",
-    subtitle: "배울 강의를 선택하세요.",
-    repo: "lecture-template" // 진행 기록을 구분하는 이름. 복제한 저장소 이름으로 변경합니다.
+    title: "두 스위치의 비밀",
+    subtitle: "엑셀로 계산하고 파이썬으로 구현하는 신경망",
+    repo: "deeplearning-3rd"
   },
   // ── 이 아래 instructor 블록은 모든 강의 저장소에서 동일하게 유지한다 ──
   instructor: {
@@ -34,15 +34,15 @@ window.SITE = {
   // 단일 강의의 slug는 폴더/URL 선택에는 무시하지만 진행 기록의 고정 ID로 사용합니다.
   // 다중 강의에서는 slug와 하위 폴더명, 하위 HTML의 body[data-level]을 일치시킵니다.
   levels: [{
-    slug: "lecture-title",
+    slug: "staircase-neural-network",
     badge: "",
-    title: "강의 제목",
-    subtitle: "한 줄 부제",
-    kicker: "TOPIC",
-    duration: "2시간",
+    title: "두 스위치의 비밀",
+    subtitle: "계단 조명의 동작을 관찰하고, 그 기록으로 학습하는 신경망을 만듭니다. 엑셀 계산부터 외부 라이브러리 없는 파이썬 구현까지.",
+    kicker: "직접 만드는 신경망 · 계단 조명 프로젝트",
+    duration: "기본 15차시 + 선택 심화",
     target: "고등학교",
     difficulty: "입문",
-    tags: ["Python"],
+    tags: ["Excel", "Python"],
     accent: "neon-green", // neon-green | violet | amber
     emoji: "",
     cover: "", // 선택 사항: 사이트 루트 기준 상대 경로, 예: assets/img/cover.webp
