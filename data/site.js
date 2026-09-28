@@ -5,7 +5,7 @@
 window.SITE = {
   site: {
     title: "두 스위치의 비밀",
-    subtitle: "엑셀로 계산하고 파이썬으로 구현하는 신경망",
+    subtitle: "웹 계산표로 계산하고 파이썬으로 구현하는 신경망",
     repo: "deeplearning-3rd"
   },
   // ── 이 아래 instructor 블록은 모든 강의 저장소에서 동일하게 유지한다 ──
@@ -37,12 +37,12 @@ window.SITE = {
     slug: "staircase-neural-network",
     badge: "",
     title: "두 스위치의 비밀",
-    subtitle: "계단 조명의 동작을 관찰하고, 그 기록으로 학습하는 신경망을 만듭니다. 엑셀 계산부터 외부 라이브러리 없는 파이썬 구현까지.",
+    subtitle: "계단 조명의 동작을 관찰하고, 그 기록으로 학습하는 신경망을 만듭니다. 웹 계산표부터 외부 라이브러리 없는 파이썬 구현까지.",
     kicker: "직접 만드는 신경망 · 계단 조명 프로젝트",
     duration: "기본 15차시 + 선택 심화",
     target: "고등학교",
     difficulty: "입문",
-    tags: ["Excel", "Python"],
+    tags: ["웹 계산표", "Python"],
     accent: "neon-green", // neon-green | violet | amber
     emoji: "",
     cover: "", // 선택 사항: 사이트 루트 기준 상대 경로, 예: assets/img/cover.webp

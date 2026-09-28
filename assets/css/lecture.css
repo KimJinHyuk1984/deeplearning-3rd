@@ -77,3 +77,77 @@
 @media (prefers-reduced-motion: reduce) {
   .switch-rocker-thumb, .lamp-bulb { transition: none; }
 }
+
+/* Lesson 1-2: encoding practice and a four-point input plot. */
+.encoding-cases { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.encoding-cases .button[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent-ink); border-color: var(--accent-text); }
+.encoding-observation { padding: var(--space-4); background: var(--surface); border-radius: var(--radius-md); font-weight: var(--weight-heading); }
+.encoding-inputs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); }
+.data-choice { display: grid; gap: var(--space-2); min-width: 0; }
+.data-select { width: 100%; min-height: 44px; padding: var(--space-2) var(--space-3); border: 1px solid var(--control-border); border-radius: var(--radius-md); background: var(--bg); color: var(--text); }
+.data-select:focus-visible { outline: 3px solid var(--accent-text); outline-offset: var(--space-1); }
+.dataset-check > .button { justify-self: start; }
+.plot-legend { display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-6); }
+.plot-legend > span { font-size: var(--font-small); }
+.data-plane { width: min(100%, 620px); justify-self: center; }
+.plot-y-title { margin-bottom: var(--space-3); }
+.plot-field { position: relative; height: 240px; margin-left: var(--space-7); margin-right: var(--space-4); border-left: 2px solid var(--control-border); border-bottom: 2px solid var(--control-border); background: var(--bg); }
+.plot-x-title { margin-top: var(--space-8); text-align: right; }
+.plot-point { position: absolute; width: 44px; height: 44px; display: grid; place-items: center; padding: 0; border: 2px solid transparent; background: transparent; border-radius: var(--radius-sm); color: var(--text); transform: translate(-50%, 50%); }
+.plot-point[aria-pressed="true"] { border-color: var(--text); z-index: 1; }
+.plot-point:hover { background: var(--surface); }
+.plot-x-0 { left: 14.2857%; }
+.plot-x-1 { left: 85.7143%; }
+.plot-y-0 { bottom: 14.2857%; }
+.plot-y-1 { bottom: 85.7143%; }
+.plot-marker { width: 18px; height: 18px; background: var(--text-muted); }
+.plot-class-1 .plot-marker { background: var(--accent-text); border-radius: var(--radius-pill); }
+.plot-x-tick, .plot-y-tick { position: absolute; font-size: var(--font-small); color: var(--text-muted); }
+.plot-x-tick { bottom: -32px; transform: translateX(-50%); }
+.plot-x-tick.plot-tick-0 { left: 14.2857%; }
+.plot-x-tick.plot-tick-1 { left: 85.7143%; }
+.plot-y-tick { left: -28px; transform: translateY(50%); }
+.plot-y-tick.plot-tick-0 { bottom: 14.2857%; }
+.plot-y-tick.plot-tick-1 { bottom: 85.7143%; }
+.plot-readout { display: block; padding: var(--space-4); border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); }
+.observation-table caption { text-align: left; padding-bottom: var(--space-3); }
+.data-worksheet, .chart-builder, .dataset-plot { min-width: 0; }
+.sheet-table { width: 100%; border-collapse: collapse; text-align: left; table-layout: fixed; }
+.sheet-table th, .sheet-table td { padding: var(--space-2); border: 1px solid var(--border); vertical-align: top; }
+.sheet-table th { background: var(--surface); font-weight: var(--weight-heading); }
+.data-worksheet .sheet-table th:first-child { width: 3em; }
+.sheet-input, .sheet-copy-area { width: 100%; min-width: 0; min-height: 44px; padding: var(--space-2); color: var(--text); background: var(--bg); border: 1px solid var(--control-border); border-radius: var(--radius-sm); font: inherit; }
+.sheet-input:focus-visible, .sheet-copy-area:focus-visible { outline: 3px solid var(--accent-text); outline-offset: 2px; }
+.sheet-input[aria-invalid="true"] { border-color: var(--warn); }
+.sheet-cell-result { display: block; overflow-wrap: anywhere; font-size: var(--font-small); }
+.sheet-cell-result:empty { display: none; }
+.sheet-cell-result { margin-top: var(--space-1); }
+.sheet-copy-area { resize: vertical; font-family: var(--font-mono); }
+.chart-controls { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); }
+.plot-workspace { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-6); align-items: start; }
+.plot-visual, .plot-inspector { display: grid; gap: var(--space-4); min-width: 0; }
+.plot-inspector .lab-actions { justify-content: start; }
+.plot-row-picker { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.plot-row-picker .button[aria-pressed="true"] { border-color: var(--accent-text); background: var(--accent-soft); color: var(--accent-ink); }
+.plot-legend-item { display: inline-flex; align-items: center; gap: var(--space-2); }
+.plot-legend-item .plot-marker { flex: 0 0 18px; }
+.plot-grid-line { position: absolute; pointer-events: none; }
+.plot-grid-x { top: 0; bottom: 0; border-left: 1px dashed var(--border); }
+.plot-grid-y { left: 0; right: 0; border-bottom: 1px dashed var(--border); }
+.plot-point { transition: left var(--duration-fast) ease, bottom var(--duration-fast) ease; }
+.plot-point .plot-marker { animation: plot-point-appear var(--duration-fast) ease-out; }
+.dataset-plot .button:disabled { cursor: default; color: var(--text-muted); background: var(--surface); }
+.dataset-plot [hidden], .sheet-copy-area[hidden] { display: none; }
+@keyframes plot-point-appear { from { transform: scale(.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@media (max-width: 800px) {
+  .plot-workspace { grid-template-columns: 1fr; }
+  .chart-controls { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .plot-point { transition: none; }
+  .plot-point .plot-marker { animation: none; }
+}
+@media (max-width: 600px) {
+  .encoding-inputs { grid-template-columns: 1fr; }
+  .plot-field { margin-right: 0; }
+}
