@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="계단 조명의 관찰 기록을 데이터로 바꾸는 고등학생 신경망 수업. 스위치 실험, 이진 분류, 웹 데이터 표, 분산형 차트 만들기와 파이썬 실습.">
+  <meta name="description" content="계단 조명으로 배우는 고등학생 신경망 수업. 관찰 데이터, 분산형 차트, 신경망의 구조, 가중치와 편향 탐색, 웹 계산표와 파이썬 실습.">
   <meta name="color-scheme" content="light dark">
   <title>두 스위치의 비밀 · 신경망 직접 만들기</title>
   <link rel="icon" href="data:,">
@@ -14,6 +14,7 @@
   <script src="assets/js/shared.js" defer></script>
   <script src="assets/js/cell-sheet.js" defer></script>
   <script src="assets/js/widgets.js" defer></script>
+  <script src="assets/js/neuron-lesson.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">본문으로 건너뛰기</a>
@@ -42,6 +43,7 @@
         <div class="hero-byline"><button class="text-button" type="button" data-open-instructor><span data-instructor-name></span> 선생님</button><span data-instructor-affiliation></span></div>
         <a class="button button-primary lesson-start" href="#lesson-1-1">1-1 학습 시작하기 <span aria-hidden="true">↓</span></a>
         <a class="button lesson-start" href="#lesson-1-2">1-2 관찰을 데이터로 바꾸기 <span aria-hidden="true">↓</span></a>
+        <a class="button lesson-start" href="#lesson-2-1">2-1 신경망과 뉴런 알아보기 <span aria-hidden="true">↓</span></a>
       </section>
 
       <section class="lecture-section" id="lesson-1-1" aria-labelledby="lesson-1-1-title" data-reveal>
@@ -296,6 +298,205 @@ for pair, target in zip(inputs, targets):
             </ul>
             <p><strong>제출할 것:</strong> 데이터 표·차트 설정·완성한 산점도 화면 기록 + 복사해 보관한 데이터 + 파이썬 출력 + ‘입력과 정답의 차이’ 한 문장.</p>
             <p class="lesson-next">다음 소단원 · 2-1 뉴런 하나로 전등 상태 예측하기</p>
+          </div>
+        </div>
+      </section>
+      <section class="lecture-section" id="lesson-2-1" aria-labelledby="lesson-2-1-title" data-reveal>
+        <div class="section-heading">
+          <p class="kicker">Ⅱ. 뉴런 하나로 예측하고 학습하기</p>
+          <h2 id="lesson-2-1-title">2-1. 뉴런 하나로 전등 상태 예측하기</h2>
+          <p class="section-description">3차시 · 약 50분 · 준비물: 1-2 관찰 데이터, 웹 브라우저, 파이썬 3 실행 환경</p>
+        </div>
+        <div class="lesson-stack">
+          <div class="lesson-panel" data-slide data-slide-title="실제 사람의 뉴런 관찰하기" data-slide-fit="contain">
+            <p class="lesson-eyebrow">01 · 신경망의 전체 모습 · 8분</p>
+            <h3>‘뉴런’이라는 이름은 어디에서 왔을까요?</h3>
+            <div class="neuron-photo-layout">
+              <figure class="neuron-photo">
+                <img src="assets/img/human-pyramidal-neuron.jpg" alt="사람 대뇌피질의 피라미드 뉴런 현미경 사진. 가운데 어두운 세포체에서 여러 가느다란 돌기가 가지처럼 뻗어 있다." width="409" height="272" loading="lazy" decoding="async">
+                <figcaption>사람 대뇌피질의 피라미드 뉴런.<br>골지 염색을 이용한 실제 현미경 사진입니다.</figcaption>
+              </figure>
+              <div class="neuron-photo-reading">
+                <p><strong>신경세포를 뉴런이라고 부릅니다.</strong> 사진 가운데의 세포체와 바깥으로 뻗은 돌기를 찾아보세요.</p>
+                <p>뇌에서는 많은 뉴런이 연결되어 신호를 주고받으며 신경망을 이룹니다. 이 사진에서는 그 구성 요소인 뉴런의 모양을 관찰합니다.</p>
+                <p><strong>생각해보기:</strong> 다른 뉴런의 신호를 받아 다음 뉴런으로 전달하는 과정을, 숫자로 계산하게 만들 수 있을까요?</p>
+              </div>
+            </div>
+            <p class="neuron-source">사진: Bob Jacobs · Colorado College, Laboratory of Quantitative Neuromorphology · <a href="https://commons.wikimedia.org/wiki/File:GolgiStainedPyramidalCell.jpg" target="_blank" rel="noopener noreferrer">원본과 출처</a> · <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 3.0</a> · 이미지 변경 없음.</p>
+          </div>
+          <div class="lesson-panel" data-slide data-slide-title="생물학적 뉴런에서 계산 모델로">
+            <h3>신호를 주고받는 방식에서 계산의 아이디어를 얻었습니다.</h3>
+            <div class="lesson-table-wrap"><table class="observation-table neuron-bridge-table">
+              <caption>생물학적 뉴런의 기능을 단순화해 생각해보기</caption>
+              <thead><tr><th scope="col">흐름</th><th scope="col">생물학적 뉴런</th><th scope="col">우리가 만들 인공 뉴런</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">받기</th><td>주로 가지돌기를 통해 다른 뉴런의 신호를 받습니다.</td><td>스위치 위치처럼 숫자로 표현한 입력을 받습니다.</td></tr>
+                <tr><th scope="row">통합하기</th><td>받은 신호들이 통합되어 다음 신호 발생에 영향을 줍니다.</td><td>입력마다 <strong>가중치</strong>를 곱해 더하고, <strong>편향</strong>을 더합니다.</td></tr>
+                <tr><th scope="row">보내기</th><td>축삭을 따라 신호를 보내고, 시냅스를 통해 다음 뉴런에 전달합니다.</td><td>계산한 값을 출력 규칙으로 바꾸어 내보냅니다. 이 값은 다음 뉴런의 입력이 될 수 있습니다.</td></tr>
+              </tbody>
+            </table></div>
+            <p><strong>인공 뉴런은 생물학적 뉴런에서 아이디어를 얻은 수학적 모델입니다.</strong> 뇌의 복잡한 구조와 작동을 단순화한 것으로, 실제 뇌의 학습 과정과 우리가 만들 학습 알고리즘이 같은 것은 아닙니다.</p>
+            <p class="neuron-source">설명 참고: <a href="https://www.nichd.nih.gov/health/topics/neuro/conditioninfo/parts" target="_blank" rel="noopener noreferrer">NIH · 신경세포와 신호 전달</a>, <a href="https://cs231n.github.io/neural-networks-1/" target="_blank" rel="noopener noreferrer">Stanford CS231n · 뉴런의 수학적 모델</a></p>
+          </div>
+          <div class="lesson-panel" data-slide data-slide-title="신경망은 무엇일까요?">
+            <h3>작은 계산 단위를 연결해 예측하는 모델입니다.</h3>
+            <p>지난 시간에는 두 스위치의 위치와 전등 상태를 숫자로 표현했습니다. 이제 스위치 위치를 입력받아 전등 상태를 예측하는 <strong>신경망</strong>을 만들어갈 것입니다.</p>
+            <p><strong>인공 뉴런</strong>은 여러 숫자를 입력받아 계산한 값을 내보내는 수학적 모형입니다. 이런 뉴런들을 서로 연결한 모델을 <strong>인공 신경망</strong>이라고 합니다.</p>
+            <p>앞쪽 뉴런이 계산한 결과는 다음 뉴런의 입력으로 전달됩니다. 마지막 계산 결과를 이용해 전등이 켜질지 꺼질지 예측합니다.</p>
+          </div>
+          <div class="lesson-panel" data-slide data-slide-title="우리가 완성할 신경망">
+            <h3>먼저 전체 모습을 보고, 뉴런 하나부터 살펴봅시다.</h3>
+            <div class="lesson-table-wrap">
+              <svg class="network-map" viewBox="0 0 720 240" role="img" aria-labelledby="network-map-title network-map-desc">
+                <title id="network-map-title">입력 두 개, 은닉 뉴런 두 개, 출력 뉴런 하나의 연결 구조</title>
+                <desc id="network-map-desc">아래층과 위층의 스위치 위치가 각각 두 은닉 뉴런으로 전달되고, 두 은닉 뉴런의 결과가 출력 뉴런으로 전달됩니다. 이 구조는 앞으로 완성할 신경망입니다.</desc>
+                <defs><marker id="network-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path class="network-arrow" d="M0 0L8 4L0 8Z"/></marker></defs>
+                <g class="network-edges" marker-end="url(#network-arrow)"><path d="M154 80H303M154 80L303 174M154 180L303 86M154 180H303M377 80L560 126M377 180L560 134"/></g>
+                <g class="network-node"><circle cx="120" cy="80" r="32"/><circle cx="120" cy="180" r="32"/><circle cx="340" cy="80" r="32"/><circle cx="340" cy="180" r="32"/><circle cx="600" cy="130" r="34"/></g>
+                <g class="network-label"><text x="120" y="88">x1</text><text x="120" y="188">x2</text><text x="340" y="88">h1</text><text x="340" y="188">h2</text><text x="600" y="138">출력</text><text x="120" y="28">입력</text><text x="340" y="28">은닉층</text><text x="600" y="28">출력층</text></g>
+              </svg>
+            </div>
+            <p><strong>입력:</strong> 두 스위치의 위치. <strong>은닉층:</strong> 입력을 받아 중간 값을 계산하는 뉴런들의 층. <strong>출력층:</strong> 최종 예측에 사용할 값을 계산하는 층입니다.</p>
+            <p>이 그림은 앞으로 완성할 구조입니다. 오늘은 구성 요소인 <strong>뉴런 하나</strong>가 어떻게 계산하는지 알아봅니다.</p>
+          </div>
+          <div class="lesson-panel" data-slide data-slide-title="예측과 학습은 어떻게 다를까요?">
+            <h3>예측은 계산하기, 학습은 계산에 쓰는 값을 조정하기입니다.</h3>
+            <ul class="lesson-list">
+              <li><strong>예측:</strong> 현재 정해진 값으로 입력을 계산해 결과를 냅니다.</li>
+              <li><strong>이 수업의 학습:</strong> 예측과 정답을 비교하고, 더 잘 맞도록 <strong>가중치와 편향</strong>을 조정합니다.</li>
+            </ul>
+            <p>신경망은 처음부터 좋은 값을 알고 있지 않습니다. 데이터에 맞는 값을 찾는 과정이 필요합니다.</p>
+            <p>오늘은 사람이 직접 값을 바꾸며 탐색합니다. 이후에는 틀린 정도와 수정 방향을 계산해, 컴퓨터가 값을 바꾸도록 만들 것입니다.</p>
+          </div>
+          <div class="lesson-panel" data-slide data-slide-title="무엇을 찾아야 할까요?">
+            <p class="lesson-eyebrow">02 · 찾을 값과 계산 방법 · 10분</p>
+            <h3>가중치 두 개와 편향 한 개를 찾습니다.</h3>
+            <div class="lesson-table-wrap"><table class="observation-table">
+              <caption>이번 뉴런 실험에서 주어진 것과 바꿀 것</caption>
+              <thead><tr><th scope="col">구분</th><th scope="col">내용</th><th scope="col">역할</th></tr></thead>
+              <tbody><tr><th scope="row">주어진 입력</th><td>x1, x2</td><td>관찰한 두 스위치의 위치</td></tr><tr><th scope="row">주어진 정답</th><td>target</td><td>예측과 비교할 전등 상태</td></tr><tr><th scope="row">찾을 값</th><td>w1, w2, b</td><td>예측 계산에 사용하는 가중치와 편향</td></tr></tbody>
+            </table></div>
+            <blockquote class="mission-quote">네 관찰 기록을 보고,<br>전등 상태를 잘 예측하는 w1, w2, b를 찾아보자.</blockquote>
+            <p>가중치와 편향처럼 모델이 학습하며 조정하는 값을 <strong>매개변수(파라미터)</strong>라고 부릅니다. 관찰한 정답은 그대로 두고, 이 값들을 조정합니다.</p>
+            <p>한 번 정한 w1·w2·b는 네 입력 조합에 <strong>공통으로</strong> 사용합니다.</p>
+          </div>
+          <div class="lesson-panel" data-slide data-slide-title="뉴런 하나가 계산하는 방법">
+            <h3>각 입력에 가중치를 곱하고, 편향을 더합니다.</h3>
+            <p class="neuron-equation">z = w1 × x1 + w2 × x2 + b</p>
+            <ul class="lesson-list">
+              <li><strong>w1, w2:</strong> 입력에서 뉴런으로 들어오는 연결의 가중치입니다. 각 입력이 계산값에 미치는 방향과 크기를 조절합니다.</li>
+              <li><strong>b:</strong> 두 곱의 합에 더하는 공통 값입니다. 예측의 기준 위치를 바꿉니다.</li>
+              <li><strong>z:</strong> 입력과 현재 매개변수로 계산한 중간 값입니다.</li>
+            </ul>
+            <p>이번에는 <strong>z가 0 이상이면 예측 1(켜짐), 0보다 작으면 예측 0(꺼짐)</strong>으로 정합니다. z가 정확히 0인 경우도 켜짐입니다.</p>
+            <p>계산한 z를 출력으로 바꾸는 규칙을 <strong>활성화 함수</strong>라고 합니다. 오늘의 규칙은 0을 경계로 출력이 바뀌는 계단 함수입니다.</p>
+          </div>
+          <div class="lesson-panel" data-slide data-slide-title="값을 어떻게 찾아갈까요?">
+            <p class="lesson-eyebrow">03 · 직접 값을 바꾸며 탐색하기 · 12분</p>
+            <h3>시작값 → 예측 → 비교 → 수정 → 다시 비교.</h3>
+            <ol class="lesson-list">
+              <li><strong>w1 = 1, w2 = 1, b = 0</strong>으로 시작합니다.</li>
+              <li>네 조합의 예측과 정답을 비교하고, 틀린 조합을 찾습니다.</li>
+              <li>어떤 값을 왜 바꿀지 말하고, <strong>한 번에 하나만</strong> 바꿉니다.</li>
+              <li>네 조합 전체를 다시 비교해 맞힌 수와 틀린 조합이 어떻게 달라졌는지 기록합니다.</li>
+            </ol>
+            <p>좋아졌는지 판단하는 첫 기준은 <strong>네 관찰 조합 중 맞힌 개수</strong>입니다. 같은 개수를 맞혀도 틀린 조합은 다를 수 있으므로 각 행도 살펴봅니다.</p>
+          </div>
+          <div data-widget="neuron-search" data-slide data-slide-title="가중치와 편향 탐색실" data-slide-fit="contain">
+            <div class="lesson-panel"><h3>시작값으로 예측해보세요.</h3><p>w1=1, w2=1, b=0이면 네 조합의 예측은 [1, 1, 1, 1]이고 두 조합을 맞힙니다. z=x1+x2를 계산해 정답 [0, 1, 1, 0]과 비교하세요.</p></div>
+          </div>
+          <div class="lesson-panel" data-slide data-slide-title="근거를 가지고 값을 바꾸기">
+            <h3>[0, 0]에서 꺼짐을 예측하려면?</h3>
+            <p>두 입력이 모두 0이면 두 곱도 0이므로 <strong>z = b</strong>입니다. 이 조합의 정답은 0이니, 편향을 음수로 바꾸어볼 근거가 있습니다.</p>
+            <ol class="lesson-list">
+              <li>시작값의 결과를 ‘시작값 확인’이라는 이유로 기록합니다.</li>
+              <li>w1과 w2는 1로 두고 <strong>b를 −0.5</strong>로 바꿉니다. [0, 0]과 나머지 세 조합을 모두 확인하고 기록합니다.</li>
+              <li><strong>b를 −1.5</strong>로 더 낮추면 좋아질지 예상하고 실험합니다. 이후 가중치 하나도 바꿔보세요.</li>
+            </ol>
+            <aside class="callout"><div><strong>오늘의 성공 기준은 바꾼 이유와 결과를 설명하는 것입니다.</strong><p>이 뉴런 하나로는 네 조합을 모두 맞히는 값을 찾을 수 없습니다. 그 이유와 구조를 바꿔 해결하는 방법은 3-1에서 살펴봅니다.</p></div></aside>
+          </div>
+          <div data-widget="neuron-history" data-slide data-slide-title="나의 매개변수 탐색 기록" data-slide-fit="contain">
+            <div class="lesson-panel"><h3>탐색 과정을 기록하세요.</h3><p>시도마다 w1, w2, b, 네 예측, 맞힌 수, 바꾼 이유를 적습니다. w1=w2=1일 때 b가 0, −0.5, −1.5인 세 경우의 맞힌 수는 각각 2, 3, 1입니다.</p></div>
+          </div>
+          <div class="lesson-panel" data-slide data-slide-title="계산을 세 단계로 풀어보기">
+            <p class="lesson-eyebrow">04 · 계산 과정과 그래프 연결하기 · 10분</p>
+            <h3>내가 바꾼 값은 어느 계산에 쓰였을까요?</h3>
+            <ol class="lesson-list">
+              <li>첫 번째 입력의 곱: <code>w1 × x1</code></li>
+              <li>두 번째 입력의 곱: <code>w2 × x2</code></li>
+              <li>두 곱에 편향을 더한 값: <code>z = 첫 곱 + 둘째 곱 + b</code></li>
+            </ol>
+            <p>다음 표에서 A2와 B2는 입력, H2와 H3는 가중치, H4는 편향입니다. D2·E2·F2에 <strong>셀 주소를 이용한 수식</strong>을 써서 세 계산을 직접 연결해보세요. 수식은 <code>=</code>로 시작하며 곱셈 기호는 <code>*</code>입니다.</p>
+            <p>입력이나 가중치가 바뀌어도 수식이 그 셀의 새 값을 사용해야 합니다. 계산한 z의 부호로 예측을 결정한 뒤, 관찰한 정답과 비교합니다.</p>
+          </div>
+          <div data-widget="neuron-calculation" data-slide data-slide-title="내 수식으로 뉴런 계산하기" data-slide-fit="contain">
+            <div class="lesson-panel"><h3>뉴런 계산표</h3><p>D2=A2*H2, E2=B2*H3, F2=D2+E2+H4입니다. 예를 들어 입력 [0,1], 가중치 [1,1], 편향 −0.5이면 z=0.5, 예측=1입니다.</p></div>
+          </div>
+          <div class="lesson-panel" data-slide data-slide-title="관찰한 정답과 모델의 예측 영역">
+            <h3>점은 관찰 기록, 배경은 모델의 예측입니다.</h3>
+            <ul class="lesson-list">
+              <li><strong>점의 모양:</strong> 사각형은 정답 0, 원은 정답 1입니다. 가중치를 바꿔도 관찰 기록은 그대로입니다.</li>
+              <li><strong>배경:</strong> 강조색 영역은 예측 1, 기본색 영역은 예측 0입니다. 경계선은 z=0인 위치입니다.</li>
+              <li><strong>점선 테두리:</strong> 예측과 관찰한 정답이 다른 점입니다.</li>
+            </ul>
+            <p>먼저 편향만 바꾸고, 다음에는 가중치 하나만 바꾸어 영역의 변화를 살펴보세요. 점을 선택해 해당 입력의 z와 예측을 확인합니다.</p>
+            <p>회색이나 강조색 배경 전체가 관찰 데이터인 것은 아닙니다. 관찰한 것은 네 점이며, 배경은 다른 좌표에서도 같은 식을 계산해 보여주는 것입니다.</p>
+          </div>
+          <div data-widget="neuron-boundary" data-slide data-slide-title="가중치와 편향이 바꾸는 예측 영역" data-slide-fit="contain">
+            <div class="lesson-panel"><h3>예측 영역을 살펴보세요.</h3><p>w1=w2=1, b=−0.5이면 경계선은 x1+x2=0.5입니다. 합이 0.5 이상인 위치에서는 켜짐을 예측합니다. 정답이 꺼짐인 (1,1)은 이 예측과 다릅니다.</p></div>
+          </div>
+          <div class="lesson-panel" data-slide data-slide-title="같은 예측을 파이썬으로 만들기">
+            <p class="lesson-eyebrow">05 · 파이썬으로 계산 옮기기 · 6분</p>
+            <h3>웹에서 바꾼 세 값을 코드에서도 바꿔봅시다.</h3>
+            <p>전체 코드를 복사해 파이썬 3에서 실행합니다. 시작값의 맞힌 수는 2/4입니다. 편향을 −0.5, −1.5로 바꿔 실행하면 각각 3/4, 1/4가 되는지 웹 기록과 비교하세요.</p>
+            <p><code>predict</code> 함수는 입력과 매개변수로 z와 예측을 계산합니다. <code>target</code>은 계산을 마친 뒤 비교하는 데 사용합니다. 이 코드의 매개변수는 여러분이 직접 수정합니다.</p>
+            <a class="button" href="files/lesson-2-1-neuron.py" download>뉴런 예측 코드 다운로드 (.py)</a>
+          </div>
+          <pre id="neuron-code" data-code data-language="python" data-label="뉴런 하나로 예측하기 · Python 3 · 전체 코드 복사" data-source="files/lesson-2-1-neuron.py" data-slide data-slide-title="주어진 데이터와 찾을 값" data-slide-lines="1-8"><code># 두 입력으로 전등 상태를 예측하는 뉴런 하나입니다.
+# 외부 라이브러리는 필요 없습니다. w1, w2, b를 직접 바꿔 탐색합니다.
+inputs = [[0, 0], [0, 1], [1, 0], [1, 1]]
+targets = [0, 1, 1, 0]
+
+w1 = 1.0
+w2 = 1.0
+b = 0.0  # 0.0, -0.5, -1.5를 차례로 실험해보세요.
+
+def predict(x1, x2, w1, w2, b):
+    z = round(w1 * x1 + w2 * x2 + b, 10)  # 소수 계산의 작은 오차 정리
+    prediction = 1 if z >= 0 else 0
+    return z, prediction
+
+correct = 0
+print(f"가중치: {w1}, {w2} / 편향: {b}")
+print("x1 x2 | 정답 | z | 예측 | 비교")
+for pair, target in zip(inputs, targets):
+    z, prediction = predict(pair[0], pair[1], w1, w2, b)
+    match = prediction == target
+    if match:
+        correct += 1
+    print(f"{pair[0]}  {pair[1]} | {target} | {z:g} | {prediction} | {'일치' if match else '다름'}")
+print(f"맞힌 조합: {correct} / {len(inputs)}")
+</code></pre>
+          <template data-slide data-slide-title="뉴런의 예측 계산 함수" data-slide-code="neuron-code" data-slide-lines="10-13"></template>
+          <template data-slide data-slide-title="네 조합의 예측을 정답과 비교하기" data-slide-code="neuron-code" data-slide-lines="15-24"></template>
+          <div class="lesson-panel" data-slide data-slide-title="무엇을 어떻게 찾았나요?">
+            <p class="lesson-eyebrow">06 · 설명하고 다음 질문 남기기 · 4분</p>
+            <h3>찾을 값과 찾아가는 과정을 설명해보세요.</h3>
+            <ol class="lesson-list">
+              <li>신경망과 인공 뉴런은 어떤 관계인가요?</li>
+              <li>오늘 주어진 값과 직접 찾으려 한 값은 각각 무엇인가요?</li>
+              <li>[0,0]에서 꺼짐을 예측하려고 편향을 음수로 바꾼 이유는 무엇인가요?</li>
+              <li>한 값을 바꾼 뒤 네 조합을 모두 확인해야 하는 이유는 무엇인가요?</li>
+            </ol>
+            <details class="answer-reveal"><summary>내 설명을 쓴 뒤 확인하기</summary><div><p>신경망은 인공 뉴런을 연결한 모델입니다. 주어진 것은 입력과 정답, 찾을 것은 w1·w2·b입니다. [0,0]에서는 z=b이므로 b가 음수여야 예측이 0입니다. 매개변수 하나가 여러 입력의 결과에 영향을 주므로 네 조합을 모두 확인해야 합니다.</p></div></details>
+          </div>
+          <div class="lesson-panel lesson-finish" data-slide data-slide-title="2-1 학습 마무리">
+            <h3>오늘은 뉴런의 값을 사람이 직접 찾아봤습니다.</h3>
+            <p>신경망의 전체 구조를 보고, 뉴런 하나의 가중치와 편향을 바꾸며 예측을 비교했습니다. 맞힌 수가 늘거나 줄어드는 과정을 기록하고, 그 계산을 표와 코드로 표현했습니다.</p>
+            <p class="writing-prompt">다음 질문: “얼마나 틀렸는지 더 자세히 측정하고, 어느 방향으로 값을 바꿀지 계산할 수 있을까?”</p>
+            <p>다음에는 틀린 정도를 나타내는 <strong>손실</strong>과 부드러운 출력 함수인 <strong>시그모이드</strong>를 배웁니다. 이어서 미분으로 수정 방향을 찾고, 경사하강법으로 값을 자동 조정할 것입니다.</p>
+            <p><strong>제출할 것:</strong> 이유를 적은 탐색 기록 3회 이상 + 완성한 계산표 + 파이썬 출력 + 찾을 값과 탐색 절차 설명.</p>
+            <p class="lesson-next">다음 소단원 · 2-2 예측이 얼마나 틀렸을까?</p>
           </div>
         </div>
       </section>
